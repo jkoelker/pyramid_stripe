@@ -30,7 +30,7 @@ Webhooks
 ~~~~~~~~
 
 A webhook url will be created for converting webhooks to pyramid events. By
-default this lives at ``/stripe``. If you wish to reloace this you can
+default this lives at ``/stripe``. If you wish to relocate this you can
 specify a prefix to ``config.include``. For example, to place the webhook
 url at ``/other/stripe`` do::
 
