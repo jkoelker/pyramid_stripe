@@ -32,9 +32,6 @@ def add_stripe_event(request):
     if not event_data:
         return
 
-    if not stripe.api_key:
-        stripe.api_key = request.registry.settings["stripe.api_key"]
-
     # NOTE(jkoelker) Events coming from webhooks are not convertable
     #                by default
     event_data[u"object"] = u"event"

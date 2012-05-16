@@ -2,6 +2,8 @@ from pyramid import config
 
 from pyramid_stripe import request
 
+import stripe
+
 
 def add_routes(config):
     config.add_route('stripe', '/stripe')
@@ -22,6 +24,9 @@ def includeme(config):
                                 reify=True)
     config.include(add_routes)
     config.scan("pyramid_stripe.views")
+
+    if not stripe.api_key:
+        stripe.api_key = config.settings["stripe.api_key"]
 
 
 def main(global_config, **settings):
