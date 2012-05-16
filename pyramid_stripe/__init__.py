@@ -26,7 +26,7 @@ def includeme(config):
     config.scan("pyramid_stripe.views")
 
     if not stripe.api_key:
-        stripe.api_key = config.settings["stripe.api_key"]
+        stripe.api_key = config.get_settings()["stripe.api_key"]
 
 
 def main(global_config, **settings):
