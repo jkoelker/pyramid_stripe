@@ -143,6 +143,6 @@ def stripe_webhook(request):
         #                webhook
         raise httpexceptions.HTTPInternalServerError("Unknown event type")
 
-    request.registry.notify(*_events)
+    [request.registry.notify(_) for _ in _events]
 
     return ''
