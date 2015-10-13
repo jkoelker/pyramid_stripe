@@ -43,48 +43,89 @@ Events
 
 The following events are avialible in the ``pyramid_stripe.events`` module
 
-- Stripe
-- Charge
-- ChargeSucceeded
-- ChargeFailed
-- ChargeRefunded
-- ChargeDisputed
-- ChargeFailed
-- Customer
-- CustomerCreated
-- CustomerUpdated
-- CustomerDeleted
-- CustomerSubscription
-- CustomerSubscriptionCreated
-- CustomerSubscriptionUpdated
-- CustomerSubscriptionDeleted
-- CustomerSubscriptionTrialWillEnd
-- CustomerDiscount
-- CustomerDiscountCreated
-- CustomerDiscountUpdated
-- CustomerDiscountDeleted
-- Invoice
-- InvoiceCreated
-- InvoiceUpdated
-- InvoicePayment
-- InvoicePaymentSucceeded
-- InvoicePaymentFailed
-- InvoiceItem
-- InvoiceItemCreated
-- InvoiceItemUpdated
-- InvoiceItemDeleted
-- Plan
-- PlanCreated
-- PlanUpdated
-- PlanDeleted
-- Coupon
-- CouponCreated
-- CouponUpdated
-- CouponDeleted
-- Transfer
-- TransferCreated
-- TransferFailed
-- Ping
+-Stripe
+-Account
+-AccountUpdated
+-ExternalAccount
+-ExternalAccountCreated
+-ExternalAccountDeleted
+-ExternalAccountUpdated
+-BalanceAvailable
+-Bitcoin
+-BitcoinReceiverCreated
+-BitcoinReceiverFilled
+-BitcoinReceiverUpdated
+-BitcoinReceiverTransactionCreated
+-Charge
+-ChargeCaptured
+-ChargeFailed
+-ChargeRefunded
+-ChargeSucceeded
+-ChargeUpdated
+-ChargeFailed
+-ChargeDispute
+-ChargeDisputeClosed
+-ChargeDisputeCreated
+-ChargeDisputeFundsReinstated
+-ChargeDisputeFundsWithdrawn
+-ChargeDisputeUpdated
+-Coupon
+-CouponCreated
+-CouponDeleted
+-CouponUpdated
+-Customer
+-CustomerCreated
+-CustomerDeleted
+-CustomerUpdated
+-CustomerBankAccountDeleted
+-CustomerDiscount
+-CustomerDiscountCreated
+-CustomerDiscountDeleted
+-CustomerDiscountUpdated
+-CustomerSource
+-CustomerSourceCreated
+-CustomerSourceDeleted
+-CustomerSourceUpdated
+-CustomerSubscription
+-CustomerSubscriptionCreated
+-CustomerSubscriptionDeleted
+-CustomerSubscriptionTrialWillEnd
+-CustomerSubscriptionUpdated
+-Invoice
+-InvoiceCreated
+-InvoicePaymentFailed
+-InvoicePaymentSucceeded
+-InvoiceUpdated
+-InvoiceItem
+-InvoiceItemCreated
+-InvoiceItemDeleted
+-InvoiceItemUpdated
+-Order
+-OrderCreated
+-OrderPaymentFailed
+-OrderPaymentSucceeded
+-OrderUpdated
+-Plan
+-PlanCreated
+-PlanDeleted
+-PlanUpdated
+-Product
+-ProductCreated
+-ProductUpdated
+-Recipient
+-RecipientCreated
+-RecipientDeleted
+-RecipientUpdated
+-Sku
+-SkuCreated
+-SkuUpdated
+-Transfer
+-TransferCreated
+-TransferFailed
+-TransferPaid
+-TransferReversed
+-TransferUpdated
+-Ping
 
 Events are considered heirarchial and all events below the event type are
 notified. For example, when the webhook is called with a
