@@ -15,7 +15,7 @@ setup(name='pyramid_stripe',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          "pyramid>=1.3a",
+          "pyramid>=1.4",
           "stripe",
       ],
       entry_points="""
