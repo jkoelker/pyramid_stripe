@@ -33,6 +33,10 @@ class IBalanceAvailable(IStripe):
     pass
 
 
+class IBalanceAvailable(IStripe):
+    pass
+
+
 class IBitcoin(IStripe):
     pass
 

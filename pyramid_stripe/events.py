@@ -19,18 +19,23 @@ class AccountUpdated(Account):
     pass
 
 
+@interface.implementer(interfaces.IExternalAccount)
+class ExternalAccount(Account):
+    pass
+
+
 @interface.implementer(interfaces.IExternalAccountCreated)
-class ExternalAccountCreated(Account):
+class ExternalAccountCreated(ExternalAccount):
     pass
 
 
 @interface.implementer(interfaces.IExternalAccountDeleted)
-class ExternalAccountDeleted(Account):
+class ExternalAccountDeleted(ExternalAccount):
     pass
 
 
 @interface.implementer(interfaces.IExternalAccountUpdated)
-class ExternalAccountUpdated(Account):
+class ExternalAccountUpdated(ExternalAccount):
     pass
 
 
@@ -105,27 +110,27 @@ class ChargeDispute(Charge):
 
 
 @interface.implementer(interfaces.IChargeDisputeClosed)
-class ChargeDisputeClosed(Stripe):
+class ChargeDisputeClosed(ChargeDispute):
     pass
 
 
 @interface.implementer(interfaces.IChargeDisputeCreated)
-class ChargeDisputeCreated(Stripe):
+class ChargeDisputeCreated(ChargeDispute):
     pass
 
 
 @interface.implementer(interfaces.IChargeDisputeFundsReinstated)
-class ChargeDisputeFundsReinstated(Stripe):
+class ChargeDisputeFundsReinstated(ChargeDispute):
     pass
 
 
 @interface.implementer(interfaces.IChargeDisputeFundsWithdrawn)
-class ChargeDisputeFundsWithdrawn(Stripe):
+class ChargeDisputeFundsWithdrawn(ChargeDispute):
     pass
 
 
 @interface.implementer(interfaces.IChargeDisputeUpdated)
-class ChargeDisputeUpdated(Stripe):
+class ChargeDisputeUpdated(ChargeDispute):
     pass
 
 
@@ -135,17 +140,17 @@ class Coupon(Stripe):
 
 
 @interface.implementer(interfaces.ICouponCreated)
-class CouponCreated(Stripe):
+class CouponCreated(Coupon):
     pass
 
 
 @interface.implementer(interfaces.ICouponDeleted)
-class CouponDeleted(Stripe):
+class CouponDeleted(Coupon):
     pass
 
 
 @interface.implementer(interfaces.ICouponUpdated)
-class CouponUpdated(Stripe):
+class CouponUpdated(Coupon):
     pass
 
 
@@ -218,13 +223,9 @@ class CustomerSourceUpdated(CustomerSource):
 class CustomerSubscription(Customer):
     pass
 
+
 @interface.implementer(interfaces.ICustomerSubscriptionCreated)
 class CustomerSubscriptionCreated(CustomerSubscription):
-    pass
-
-
-@interface.implementer(interfaces.ICustomerSubscriptionUpdated)
-class CustomerSubscriptionUpdated(CustomerSubscription):
     pass
 
 
@@ -238,23 +239,8 @@ class CustomerSubscriptionTrialWillEnd(CustomerSubscription):
     pass
 
 
-@interface.implementer(interfaces.ICustomerDiscount)
-class CustomerDiscount(Customer):
-    pass
-
-
-@interface.implementer(interfaces.ICustomerDiscountCreated)
-class CustomerDiscountCreated(CustomerDiscount):
-    pass
-
-
-@interface.implementer(interfaces.ICustomerDiscountUpdated)
-class CustomerDiscountUpdated(CustomerDiscount):
-    pass
-
-
-@interface.implementer(interfaces.ICustomerDiscountDeleted)
-class CustomerDiscountDeleted(CustomerDiscount):
+@interface.implementer(interfaces.ICustomerSubscriptionUpdated)
+class CustomerSubscriptionUpdated(CustomerSubscription):
     pass
 
 
@@ -268,23 +254,18 @@ class InvoiceCreated(Invoice):
     pass
 
 
-@interface.implementer(interfaces.IInvoiceUpdated)
-class InvoiceUpdated(Invoice):
-    pass
-
-
-@interface.implementer(interfaces.IInvoicePayment)
-class InvoicePayment(Invoice):
+@interface.implementer(interfaces.IInvoicePaymentFailed)
+class InvoicePaymentFailed(Invoice):
     pass
 
 
 @interface.implementer(interfaces.IInvoicePaymentSucceeded)
-class InvoicePaymentSucceeded(InvoicePayment):
+class InvoicePaymentSucceeded(Invoice):
     pass
 
 
-@interface.implementer(interfaces.IInvoicePaymentFailed)
-class InvoicePaymentFailed(InvoicePayment):
+@interface.implementer(interfaces.IInvoiceUpdated)
+class InvoiceUpdated(Invoice):
     pass
 
 
@@ -298,13 +279,38 @@ class InvoiceItemCreated(InvoiceItem):
     pass
 
 
+@interface.implementer(interfaces.IInvoiceItemDeleted)
+class InvoiceItemDeleted(InvoiceItem):
+    pass
+
+
 @interface.implementer(interfaces.IInvoiceItemUpdated)
 class InvoiceItemUpdated(InvoiceItem):
     pass
 
 
-@interface.implementer(interfaces.IInvoiceItemDeleted)
-class InvoiceItemDeleted(InvoiceItem):
+@interface.implementer(interfaces.IOrder)
+class Order(Stripe):
+    pass
+
+
+@interface.implementer(interfaces.IOrderCreated)
+class OrderCreated(Order):
+    pass
+
+
+@interface.implementer(interfaces.IOrderPaymentFailed)
+class OrderPaymentFailed(Order):
+    pass
+
+
+@interface.implementer(interfaces.IOrderPaymentSucceeded)
+class OrderPaymentSucceeded(Order):
+    pass
+
+
+@interface.implementer(interfaces.IOrderUpdated)
+class OrderUpdated(Order):
     pass
 
 
@@ -318,33 +324,63 @@ class PlanCreated(Plan):
     pass
 
 
-@interface.implementer(interfaces.IPlanUpdated)
-class PlanUpdated(Plan):
-    pass
-
-
 @interface.implementer(interfaces.IPlanDeleted)
 class PlanDeleted(Plan):
     pass
 
 
-@interface.implementer(interfaces.ICoupon)
-class Coupon(Stripe):
+@interface.implementer(interfaces.IPlanUpdated)
+class PlanUpdated(Plan):
     pass
 
 
-@interface.implementer(interfaces.ICouponCreated)
-class CouponCreated(Coupon):
+@interface.implementer(interfaces.IProduct)
+class Product(Stripe):
     pass
 
 
-@interface.implementer(interfaces.ICouponUpdated)
-class CouponUpdated(Coupon):
+@interface.implementer(interfaces.IProductCreated)
+class ProductCreated(Product):
     pass
 
 
-@interface.implementer(interfaces.ICouponDeleted)
-class CouponDeleted(Coupon):
+@interface.implementer(interfaces.IProductUpdated)
+class ProductUpdated(Product):
+    pass
+
+
+@interface.implementer(interfaces.IRecipient)
+class Recipient(Stripe):
+    pass
+
+
+@interface.implementer(interfaces.IRecipientCreated)
+class RecipientCreated(Recipient):
+    pass
+
+
+@interface.implementer(interfaces.IRecipientDeleted)
+class RecipientDeleted(Recipient):
+    pass
+
+
+@interface.implementer(interfaces.IRecipientUpdated)
+class RecipientUpdated(Recipient):
+    pass
+
+
+@interface.implementer(interfaces.ISku)
+class Sku(Stripe):
+    pass
+
+
+@interface.implementer(interfaces.ISkuCreated)
+class SkuCreated(Sku):
+    pass
+
+
+@interface.implementer(interfaces.ISkuUpdated)
+class SkuUpdated(Sku):
     pass
 
 
@@ -360,6 +396,21 @@ class TransferCreated(Transfer):
 
 @interface.implementer(interfaces.ITransferFailed)
 class TransferFailed(Transfer):
+    pass
+
+
+@interface.implementer(interfaces.ITransferPaid)
+class TransferPaid(Transfer):
+    pass
+
+
+@interface.implementer(interfaces.ITransferReversed)
+class TransferReversed(Transfer):
+    pass
+
+
+@interface.implementer(interfaces.ITransferUpdated)
+class TransferUpdated(Transfer):
     pass
 
 

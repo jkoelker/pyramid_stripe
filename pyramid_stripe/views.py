@@ -8,141 +8,83 @@ from pyramid_stripe import events
 
 log = logging.getLogger(__name__)
 
+STRIPE_EVENTS = {
+    'account.updated': events.AccountUpdated,
+    'account.external_account.created': events.ExternalAccountCreated,
+    'account.external_account.deleted': events.ExternalAccountDeleted,
+    'account.external_account.updated': events.ExternalAccountUpdated,
+    'balance.available': events.BalanceAvailable,
+    'bitcoin.receiver.created': events.BitcoinReceiverCreated,
+    'bitcoin.receiver.filled': events.BitcoinReceiverFilled,
+    'bitcoin.receiver.updated': events.BitcoinReceiverUpdated,
+    'bitcoin.receiver.transaction.created': events.BitcoinReceiverTransactionCreated,
+    'charge.captured': events.ChargeCaptured,
+    'charge.failed': events.ChargeFailed,
+    'charge.refunded': events.ChargeRefunded,
+    'charge.succeeded': events.ChargeSucceeded,
+    'charge.dispute.closed': events.ChargeDisputeClosed,
+    'charge.dispute.created': events.ChargeDisputeCreated,
+    'charge.dispute.funds_reinstated': events.ChargeDisputeFundsReinstated,
+    'charge.dispute.funds_withdrawn': events.ChargeDisputeFundsWithdrawn,
+    'charge.dispute.updated': events.ChargeDisputeUpdated,
+    'coupon.created': events.CouponCreated,
+    'coupon.deleted': events.CouponDeleted,
+    'coupon.updated': events.CouponUpdated,
+    'customer.created': events.CustomerCreated,
+    'customer.deleted': events.CustomerDeleted,
+    'customer.updated': events.CustomerUpdated,
+    'customer.bank_account.deleted': events.CustomerBankAccountDeleted,
+    'customer.discount.created': events.CustomerDiscountCreated,
+    'customer.discount.deleted': events.CustomerDiscountDeleted,
+    'customer.discount.updated': events.CustomerDiscountUpdated,
+    'customer.source.created': events.CustomerSourceCreated,
+    'customer.source.deleted': events.CustomerSourceDeleted,
+    'customer.source.updated': events.CustomerSourceUpdated,
+    'customer.subscription.created': events.CustomerSubscriptionCreated,
+    'customer.subscription.deleted': events.CustomerSubscriptionDeleted,
+    'customer.subscription.trial_will_end': events.CustomerSubscriptionTrialWillEnd,
+    'customer.subscription.updated': events.CustomerSubscriptionUpdated,
+    'invoice.created': events.InvoiceCreated,
+    'invoice.payment_failed': events.InvoicePaymentFailed,
+    'invoice.payment_succeeded': events.InvoicePaymentSucceeded,
+    'invoice.updated': events.InvoiceUpdated,
+    'invoiceitem.created': events.InvoiceItemCreated,
+    'invoiceitem.deleted': events.InvoiceItemDeleted,
+    'invoiceitem.updated': events.InvoiceItemUpdated,
+    'order.created': events.OrderCreated,
+    'order.payment_failed': events.OrderPaymentFailed,
+    'order.payment_succeeded': events.OrderPaymentSucceeded,
+    'order.updated': events.OrderUpdated,
+    'plan.created': events.PlanCreated,
+    'plan.deleted': events.PlanDeleted,
+    'plan.updated': events.PlanUpdated,
+    'product.created': events.ProductCreated,
+    'product.updated': events.ProductUpdated,
+    'recipient.created': events.RecipientCreated,
+    'recipient.deleted': events.RecipientDeleted,
+    'recipient.updated': events.RecipientUpdated,
+    'sku.created': events.SkuCreated,
+    'sku.updated': events.SkuUpdated,
+    'transfer.created': events.TransferCreated,
+    'transfer.failed': events.TransferFailed,
+    'transfer.paid': events.TransferPaid,
+    'transfer.reversed': events.TransferReversed,
+    'transfer.updated': events.TransferUpdated,
+    'ping': events.Ping
+}
+
 
 @view.view_config(route_name="stripe",
                   request_method="POST",
                   renderer="string")
 def stripe_webhook(request):
     event = request.stripe_raw
-    _events = [events.Stripe(request)]
 
-    # TODO(jkoelker) DRY this up
-    # NOTE(jkoelker) This ordering is important
-    if event["type"].startswith("charge."):
-        _events.append(events.Charge(request))
-
-        if "succeeded" in event["type"]:
-            _events.append(events.ChargeSucceeded(request))
-
-        elif "failed" in event["type"]:
-            _events.append(events.ChargeFailed(request))
-
-        elif "refunded" in event["type"]:
-            _events.append(events.ChargeRefunded(request))
-
-        elif "disputed" in event["type"]:
-            _events.append(events.ChargeDisputed(request))
-
-    elif event["type"].startswith("customer."):
-        _events.append(events.Customer(request))
-
-        if "subscription" in event["type"]:
-            _events.append(events.CustomerSubscription(request))
-
-            if "created" in event["type"]:
-                _events.append(events.CustomerSubscriptionCreated(request))
-
-            elif "updated" in event["type"]:
-                _events.append(events.CustomerSubscriptionUpdated(request))
-
-            elif "deleted" in event["type"]:
-                _events.append(events.CustomerSubscriptionDeleted(request))
-
-            elif "trial_will_end" in event["type"]:
-                e = events.CustomerSubscriptionTrialWillEnd(request)
-                _events.append(e)
-
-        elif "discount" in event["type"]:
-            _events.append(events.CustomerDiscount(request))
-
-            if "created" in event["type"]:
-                _events.append(events.CustomerDiscountCreated(request))
-
-            elif "updated" in event["type"]:
-                _events.append(events.CustomerDiscountUpdated(request))
-
-            elif "deleted" in event["type"]:
-                _events.append(events.CustomerDiscountDeleted(request))
-
-        else:
-            if "created" in event["type"]:
-                _events.append(events.CustomerCreated(request))
-
-            elif "updated" in event["type"]:
-                _events.append(events.CustomerUpdated(request))
-
-            elif "deleted" in event["type"]:
-                _events.append(events.CustomerDeleted(request))
-
-    elif event["type"].startswith("invoice."):
-        _events.append(events.Invoice(request))
-
-        if "created" in event["type"]:
-            _events.append(events.InvoiceCreated(request))
-
-        elif "updated" in event["type"]:
-            _events.append(events.InvoiceUpdated(request))
-
-        elif "payment_succeeded" in event["type"]:
-            _events.append(events.InvoicePaymentSucceeded(request))
-
-        elif "payment_failed" in event["type"]:
-            _events.append(events.InvoicePaymentFailed(request))
-
-    elif event["type"].startswith("invoiceitem."):
-        _events.append(events.InvoiceItem(request))
-
-        if "created" in event["type"]:
-            _events.append(events.InvoiceItemCreated(request))
-
-        elif "updated" in event["type"]:
-            _events.append(events.InvoiceItemUpdated(request))
-
-        elif "deleted" in event["type"]:
-            _events.append(events.InvoiceItemDeleted(request))
-
-    elif event["type"].startswith("plan."):
-        _events.append(events.Plan(request))
-
-        if "created" in event["type"]:
-            _events.append(events.PlanCreated(request))
-
-        elif "updated" in event["type"]:
-            _events.append(events.PlanUpdated(request))
-
-        elif "deleted" in event["type"]:
-            _events.append(events.PlanDeleted(request))
-
-    elif event["type"].startswith("coupon."):
-        _events.append(events.Coupon(request))
-
-        if "created" in event["type"]:
-            _events.append(events.CouponCreated(request))
-
-        elif "updated" in event["type"]:
-            _events.append(events.CouponUpdated(request))
-
-        elif "deleted" in event["type"]:
-            _events.append(events.CouponDeleted(request))
-
-    elif event["type"].startswith("transfer."):
-        _events.append(events.Transfer(request))
-
-        if "created" in event["type"]:
-            _events.append(events.TransferCreated(request))
-
-        elif "failed" in event["type"]:
-            _events.append(events.TransferFailed(request))
-
-    elif event["type"] == "ping":
-        _events.append(events.Ping(request))
-
+    if event["type"] in STRIPE_EVENTS:
+        # Build and execute the webhook
+        stripe_event = STRIPE_EVENTS[event["type"]](request)
+        request.registry.notify(stripe_event)
     else:
-        # NOTE(jkoelker) If this is reached, we don't know about this event
-        #                raise a 500 so stripe knows we did not get this
-        #                webhook
         raise httpexceptions.HTTPInternalServerError("Unknown event type")
-
-    [request.registry.notify(_) for _ in _events]
 
     return ''
